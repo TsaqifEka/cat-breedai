@@ -1,6 +1,6 @@
 {
-  "app.title": "CatBreedScanAI",
-  "app.subtitle": "Unggah atau ambil foto kucing untuk mengetahui rasnya.",
+  "app.title": "Analisis Ras Kucing",
+  "app.subtitle": "Identifikasi canggih berbasis AI untuk klasifikasi ras dan genetika kucing.",
   "dropzone.drag": "Tarik & lepas gambar di sini",
   "dropzone.or": "ATAU",
   "dropzone.browse": "Pilih File",

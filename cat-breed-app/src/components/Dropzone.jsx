@@ -3,21 +3,41 @@ import { Camera, UploadCloud, XCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 const Dropzone = ({ onImageSelect }) => {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
   const videoRef = useRef(null);
   
+  const [activeTab, setActiveTab] = useState('upload'); // 'upload' or 'camera'
   const [isDragging, setIsDragging] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [stream, setStream] = useState(null);
 
-  // Clean up stream on unmount
+  // Handle tab switching: Auto-start or stop camera
+  useEffect(() => {
+    if (activeTab === 'camera') {
+      startCamera();
+    } else if (activeTab === 'upload') {
+      stopCamera();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
+
+  // Clean up stream on unmount only
   useEffect(() => {
     return () => {
       stopCamera();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Assign stream to video element when it mounts
+  useEffect(() => {
+    if (activeTab === 'camera' && isCameraActive && videoRef.current && stream) {
+      videoRef.current.srcObject = stream;
+      videoRef.current.play().catch(e => console.error("Video play error:", e));
+    }
+  }, [isCameraActive, stream, activeTab]);
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -44,18 +64,22 @@ const Dropzone = ({ onImageSelect }) => {
   };
 
   const startCamera = async () => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      console.warn("Camera API not available. Falling back to native input.");
+      if (cameraInputRef.current) {
+        cameraInputRef.current.click();
+      }
+      return;
+    }
+
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' }
+        video: true
       });
       setStream(mediaStream);
       setIsCameraActive(true);
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
     } catch (err) {
       console.error("Error accessing camera:", err);
-      // Fallback to mobile native camera input if getUserMedia fails
       if (cameraInputRef.current) {
         cameraInputRef.current.click();
       }
@@ -73,8 +97,8 @@ const Dropzone = ({ onImageSelect }) => {
   const capturePhoto = () => {
     if (!videoRef.current) return;
     const canvas = document.createElement('canvas');
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
+    canvas.width = videoRef.current.videoWidth || 640;
+    canvas.height = videoRef.current.videoHeight || 480;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
     canvas.toBlob((blob) => {
@@ -87,27 +111,31 @@ const Dropzone = ({ onImageSelect }) => {
   };
 
   return (
-    <div className="glass animate-fade-in" style={{ borderRadius: '1rem', padding: '2rem' }}>
-      {isCameraActive ? (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ borderRadius: '0.5rem', overflow: 'hidden', width: '100%', backgroundColor: '#000' }}>
-            <video ref={videoRef} autoPlay playsInline style={{ width: '100%', display: 'block' }} />
-          </div>
-          <div style={{ display: 'flex', gap: '1rem', width: '100%' }}>
-            <button className="btn btn-secondary" onClick={stopCamera}>
-              <XCircle size={20} />
-              {t('dropzone.camera.stop')}
-            </button>
-            <button className="btn" onClick={capturePhoto}>
-              <Camera size={20} />
-              {t('dropzone.camera.capture')}
-            </button>
-          </div>
-        </div>
-      ) : (
-        <>
+    <div className="dropzone-container">
+      
+      {/* Tab Switcher */}
+      <div className="tab-switcher">
+        <button 
+          className={`tab-btn ${activeTab === 'upload' ? 'active' : ''}`}
+          onClick={() => setActiveTab('upload')}
+        >
+          <UploadCloud size={20} />
+          {lang === 'id' ? 'Unggah Gambar' : 'Upload Image'}
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'camera' ? 'active' : ''}`}
+          onClick={() => setActiveTab('camera')}
+        >
+          <Camera size={20} />
+          {lang === 'id' ? 'Gunakan Kamera' : 'Use Camera'}
+        </button>
+      </div>
+
+      <div className="tab-content">
+        {activeTab === 'upload' ? (
+          /* Upload Column */
           <div 
-            className={`dropzone ${isDragging ? 'active' : ''}`}
+            className={`glass dropzone ${isDragging ? 'active' : ''}`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -120,17 +148,41 @@ const Dropzone = ({ onImageSelect }) => {
               {t('dropzone.browse')}
             </button>
           </div>
-          
-          <div className="text-center mt-4 mb-4">
-            <span style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>{t('dropzone.or')}</span>
+        ) : (
+          /* Camera Column */
+          <div className="glass camera-section">
+            {isCameraActive ? (
+              <div className="camera-active-container">
+                <div className="video-wrapper">
+                  <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
+                <div className="camera-controls">
+                  <button className="btn btn-secondary" onClick={stopCamera}>
+                    <XCircle size={20} />
+                    Stop
+                  </button>
+                  <button className="btn" onClick={capturePhoto}>
+                    <Camera size={20} />
+                    Capture
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="camera-inactive-container">
+                <Camera size={48} color="var(--color-text-muted)" style={{ marginBottom: '1rem', opacity: 0.5 }} />
+                <h3 style={{ marginBottom: '0.5rem' }}>Live Camera</h3>
+                <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', marginBottom: '1rem' }}>
+                  Snap a photo directly
+                </p>
+                <button className="btn btn-secondary" onClick={startCamera}>
+                  <Camera size={20} />
+                  {t('dropzone.camera')}
+                </button>
+              </div>
+            )}
           </div>
-          
-          <button className="btn btn-secondary" onClick={startCamera}>
-            <Camera size={20} />
-            {t('dropzone.camera')}
-          </button>
-        </>
-      )}
+        )}
+      </div>
 
       {/* Hidden file inputs */}
       <input 

@@ -1,6 +1,6 @@
 {
-  "app.title": "CatBreedScanAI",
-  "app.subtitle": "Upload or snap a photo of a cat to identify its breed.",
+  "app.title": "Feline Breed Analyzer",
+  "app.subtitle": "Advanced AI-powered identification for feline genetics and breed classification.",
   "dropzone.drag": "Drag & drop an image here",
   "dropzone.or": "OR",
   "dropzone.browse": "Browse Files",
