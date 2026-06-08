@@ -1,0 +1,30 @@
+{
+  "app.title": "CatBreedScanAI",
+  "app.subtitle": "Unggah atau ambil foto kucing untuk mengetahui rasnya.",
+  "dropzone.drag": "Tarik & lepas gambar di sini",
+  "dropzone.or": "ATAU",
+  "dropzone.browse": "Pilih File",
+  "dropzone.camera": "Gunakan Kamera",
+  "dropzone.camera.stop": "Tutup Kamera",
+  "dropzone.camera.capture": "Ambil Foto",
+  "loading.analyzing": "Menganalisis Gambar...",
+  "loading.facts": [
+    "Tahukah kamu? Kucing memiliki 32 otot di setiap telinganya.",
+    "Sekelompok kucing disebut clowder.",
+    "Kucing menghabiskan 70% hidupnya untuk tidur.",
+    "Sidik hidung kucing itu unik, mirip seperti sidik jari manusia.",
+    "Kucing bisa melompat hingga enam kali panjang tubuhnya."
+  ],
+  "result.confidence": "Tingkat Keyakinan",
+  "result.top_predictions": "Prediksi Teratas",
+  "result.scan_another": "Pindai Gambar Lain",
+  "error.not_cat": "Ini bukan kucing, silakan masukkan gambar kucing",
+  "error.cat_confidence": "Keyakinan Kucing",
+  "breed.Persian": "Persian (Kucing Persia)",
+  "breed.Bengal": "Bengal (Kucing Bengal)",
+  "breed.British_Shorthair": "British Shorthair (Kucing British)",
+  "breed.Siamese": "Siamese (Kucing Siam)",
+  "breed.Maine_Coon": "Maine Coon (Kucing Maine Coon)",
+  "breed.Sphynx": "Sphynx (Kucing Sphynx)",
+  "breed.Ragdoll": "Ragdoll (Kucing Ragdoll)"
+}

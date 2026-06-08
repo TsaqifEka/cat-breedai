@@ -1,0 +1,44 @@
+{
+  "stage1": {
+    "input_shape": [
+      224,
+      224,
+      3
+    ],
+    "threshold": 0.75,
+    "classes": [
+      "not_cat",
+      "cat"
+    ]
+  },
+  "stage2": {
+    "input_shape": [
+      224,
+      224,
+      3
+    ],
+    "classes": [
+      "Persian",
+      "Bengal",
+      "British_Shorthair",
+      "Siamese",
+      "Maine_Coon",
+      "Sphynx",
+      "Ragdoll"
+    ],
+    "class_indices": {
+      "Persian": 0,
+      "Bengal": 1,
+      "British_Shorthair": 2,
+      "Siamese": 3,
+      "Maine_Coon": 4,
+      "Sphynx": 5,
+      "Ragdoll": 6
+    }
+  },
+  "preprocessing": {
+    "resize": 224,
+    "normalize": false,
+    "note": "EfficientNetB0 has built-in rescale. Just cast to float32 and resize."
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "app.title": "CatBreedScanAI",
+  "app.subtitle": "Upload or snap a photo of a cat to identify its breed.",
+  "dropzone.drag": "Drag & drop an image here",
+  "dropzone.or": "OR",
+  "dropzone.browse": "Browse Files",
+  "dropzone.camera": "Use Camera",
+  "dropzone.camera.stop": "Stop Camera",
+  "dropzone.camera.capture": "Capture Photo",
+  "loading.analyzing": "Analyzing Image...",
+  "loading.facts": [
+    "Did you know? Cats have 32 muscles in each ear.",
+    "A group of cats is called a clowder.",
+    "Cats sleep for 70% of their lives.",
+    "A cat's nose print is unique, much like a human's fingerprint.",
+    "Cats can jump up to six times their length."
+  ],
+  "result.confidence": "Confidence",
+  "result.top_predictions": "Top Predictions",
+  "result.scan_another": "Scan Another Image",
+  "error.not_cat": "It's not a cat, please input a cat",
+  "error.cat_confidence": "Cat confidence",
+  "breed.Persian": "Persian",
+  "breed.Bengal": "Bengal",
+  "breed.British_Shorthair": "British Shorthair",
+  "breed.Siamese": "Siamese",
+  "breed.Maine_Coon": "Maine Coon",
+  "breed.Sphynx": "Sphynx",
+  "breed.Ragdoll": "Ragdoll"
+}
