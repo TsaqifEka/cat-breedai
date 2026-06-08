@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Camera, UploadCloud, XCircle } from 'lucide-react';
+import { Camera, UploadCloud, XCircle, RefreshCw } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 const Dropzone = ({ onImageSelect }) => {
@@ -12,6 +12,7 @@ const Dropzone = ({ onImageSelect }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [stream, setStream] = useState(null);
+  const [facingMode, setFacingMode] = useState('user');
 
   // Handle tab switching: Auto-start or stop camera
   useEffect(() => {
@@ -63,7 +64,7 @@ const Dropzone = ({ onImageSelect }) => {
     }
   };
 
-  const startCamera = async () => {
+  const startCamera = async (mode = facingMode) => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       console.warn("Camera API not available. Falling back to native input.");
       if (cameraInputRef.current) {
@@ -74,7 +75,7 @@ const Dropzone = ({ onImageSelect }) => {
 
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: true
+        video: { facingMode: { ideal: mode } }
       });
       setStream(mediaStream);
       setIsCameraActive(true);
@@ -92,6 +93,13 @@ const Dropzone = ({ onImageSelect }) => {
     }
     setIsCameraActive(false);
     setStream(null);
+  };
+
+  const switchCamera = async () => {
+    stopCamera();
+    const newMode = facingMode === 'user' ? 'environment' : 'user';
+    setFacingMode(newMode);
+    await startCamera(newMode);
   };
 
   const capturePhoto = () => {
@@ -157,6 +165,9 @@ const Dropzone = ({ onImageSelect }) => {
                   <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
                 <div className="camera-controls">
+                  <button className="btn btn-secondary" onClick={switchCamera} style={{ flex: 0.5 }}>
+                    <RefreshCw size={20} />
+                  </button>
                   <button className="btn btn-secondary" onClick={stopCamera}>
                     <XCircle size={20} />
                     Stop
